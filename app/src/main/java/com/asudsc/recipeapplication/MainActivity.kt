@@ -12,8 +12,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.asudsc.recipeapplication.model.Recipe
 import com.asudsc.recipeapplication.ui.components.CustomTopBar
-import com.asudsc.recipeapplication.ui.components.SearchAppBarState
 import com.asudsc.recipeapplication.ui.theme.RecipeApplicationTheme
 import recipes
 
@@ -24,14 +24,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RecipeApplicationTheme {
-                val searchAppBarState: SearchAppBarState by sharedViewModel.searchAppBarState
-                val searchTextState: String by sharedViewModel.searchTextState
-
                 MyApp(
                     modifier = Modifier.fillMaxSize(),
                     sharedViewModel = sharedViewModel,
-                    searchAppBarState = searchAppBarState,
-                    searchTextState = searchTextState,
                     recipeList = recipes
                 )
             }
@@ -39,49 +34,52 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MyApp(
     modifier: Modifier = Modifier,
     sharedViewModel: SharedViewModel,
-    searchAppBarState: SearchAppBarState,
-    searchTextState: String,
     recipeList: List<Recipe>
 ) {
     Scaffold(
         topBar = {
-            CustomTopBar(
-                sharedViewModel = sharedViewModel,
-                searchAppBarState = searchAppBarState,
-                searchTextState = searchTextState
-            )
+            CustomTopBar(sharedViewModel = sharedViewModel)
         },
     ) { padding ->
         LazyColumn(
-            modifier = modifier.padding(
+            contentPadding = PaddingValues(
                 top = (padding.calculateTopPadding() + 10.dp),
                 start = 10.dp,
-                end = 10.dp
+                end = 10.dp,
+                bottom = 20.dp
             ),
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
-            for (recipe in recipeList) {
+            val filteredRecipes = filterRecipes(sharedViewModel.searchTextState.value, recipeList)
+            for (recipe in filteredRecipes) {
                 item {
                     RecipeCard(recipe = recipe)
                 }
             }
+
         }
+    }
+}
+
+fun filterRecipes(searchText: String, recipeList: List<Recipe>): List<Recipe> {
+    val lowercaseSearchText = searchText.lowercase()
+    return recipeList.filter { recipe ->
+        recipe.name.lowercase().contains(lowercaseSearchText)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun RecipeAppPreview() {
     RecipeApplicationTheme {
         MyApp(
-            searchAppBarState = SearchAppBarState.CLOSED,
             sharedViewModel = SharedViewModel(),
-            searchTextState = "",
             recipeList = recipes
         )
     }

@@ -1,4 +1,4 @@
-package com.asudsc.recipeapplication
+package com.asudsc.recipeapplication.model
 
 data class Recipe(
     val id: Int,
