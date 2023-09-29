@@ -1,11 +1,17 @@
 package com.asudsc.recipeapplication.ui.screens
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -58,9 +65,11 @@ internal fun DetailScreen(
         },
     ) { padding ->
         Column(
-            modifier.padding(
-                top = (padding.calculateTopPadding())
-            )
+            modifier = Modifier
+                .padding(
+                    top = (padding.calculateTopPadding())
+                )
+                .verticalScroll(rememberScrollState())
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -70,16 +79,47 @@ internal fun DetailScreen(
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 modifier = Modifier
-                    .height(150.dp)
+                    .height(200.dp)
                     .fillMaxWidth()
             )
             Column(Modifier.padding(20.dp)) {
-                Text(text = recipe.name, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                Text(
+                    text = "How to make ${recipe.name}",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(text = recipe.description, fontSize = 15.sp)
                 Spacer(modifier = Modifier.height(15.dp))
+                for (index in recipe.steps.indices) {
+                    StepItem(stepNumber = index + 1, description = recipe.steps[index])
+                }
             }
         }
+    }
+}
+
+@Composable
+fun StepItem(stepNumber: Int, description: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+    ) {
+        Text(
+            text = "${stepNumber}.",
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .width(24.dp),
+            fontWeight = FontWeight.Bold,
+
+            color = MaterialTheme.colorScheme.primary
+        )
+        Text(
+            text = description,
+            fontSize = 15.sp,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
     }
 }
 

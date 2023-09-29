@@ -1,6 +1,5 @@
 package com.asudsc.recipeapplication.ui.components
 
-import SharedViewModel
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
