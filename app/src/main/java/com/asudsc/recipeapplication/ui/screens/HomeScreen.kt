@@ -1,6 +1,5 @@
 package com.asudsc.recipeapplication.ui.screens
 
-import SharedViewModel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +14,7 @@ import com.asudsc.recipeapplication.model.recipes
 import com.asudsc.recipeapplication.ui.components.RecipeCard
 import com.asudsc.recipeapplication.ui.components.SearchBar
 import com.asudsc.recipeapplication.ui.theme.RecipeApplicationTheme
+import com.asudsc.recipeapplication.viewmodels.SharedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,7 +55,6 @@ internal fun HomeScreen(
                     )
                 }
             }
-
         }
     }
 }

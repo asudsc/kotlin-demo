@@ -1,6 +1,5 @@
 package com.asudsc.recipeapplication
 
-import SharedViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,6 +15,7 @@ import com.asudsc.recipeapplication.model.recipes
 import com.asudsc.recipeapplication.ui.screens.DetailScreen
 import com.asudsc.recipeapplication.ui.screens.HomeScreen
 import com.asudsc.recipeapplication.ui.theme.RecipeApplicationTheme
+import com.asudsc.recipeapplication.viewmodels.SharedViewModel
 
 class MainActivity : ComponentActivity() {
     private val sharedViewModel: SharedViewModel by viewModels()

@@ -1,3 +1,5 @@
+package com.asudsc.recipeapplication.viewmodels
+
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
