@@ -1,3 +1,5 @@
+package com.asudsc.recipeapplication.ui.components
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +23,10 @@ import coil.request.ImageRequest
 import com.asudsc.recipeapplication.model.Recipe
 
 @Composable
-fun RecipeCard(recipe: Recipe) {
+fun RecipeCard(
+    recipe: Recipe,
+    openDetail: (Int) -> Unit
+) {
     Surface(
         color = MaterialTheme.colorScheme.secondary,
         modifier = Modifier
@@ -45,7 +50,7 @@ fun RecipeCard(recipe: Recipe) {
                 Text(text = recipe.description, fontSize = 15.sp)
                 Spacer(modifier = Modifier.height(15.dp))
                 ElevatedButton(
-                    onClick = { },
+                    onClick = { openDetail(recipe.id) },
                 ) {
                     Text("Read more")
                 }

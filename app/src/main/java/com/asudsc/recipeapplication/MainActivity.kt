@@ -1,21 +1,21 @@
 package com.asudsc.recipeapplication
 
-import RecipeCard
 import SharedViewModel
 import android.os.Bundle
-import androidx.activity.*
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.asudsc.recipeapplication.model.Recipe
-import com.asudsc.recipeapplication.ui.components.CustomTopBar
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.asudsc.recipeapplication.model.recipes
+import com.asudsc.recipeapplication.ui.screens.DetailScreen
+import com.asudsc.recipeapplication.ui.screens.HomeScreen
 import com.asudsc.recipeapplication.ui.theme.RecipeApplicationTheme
-import recipes
 
 class MainActivity : ComponentActivity() {
     private val sharedViewModel: SharedViewModel by viewModels()
@@ -23,64 +23,34 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val navController = rememberNavController()
+
             RecipeApplicationTheme {
-                MyApp(
-                    modifier = Modifier.fillMaxSize(),
-                    sharedViewModel = sharedViewModel,
-                    recipeList = recipes
-                )
-            }
-        }
-    }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun MyApp(
-    modifier: Modifier = Modifier,
-    sharedViewModel: SharedViewModel,
-    recipeList: List<Recipe>
-) {
-    Scaffold(
-        topBar = {
-            CustomTopBar(sharedViewModel = sharedViewModel)
-        },
-    ) { padding ->
-        LazyColumn(
-            contentPadding = PaddingValues(
-                top = (padding.calculateTopPadding() + 10.dp),
-                start = 10.dp,
-                end = 10.dp,
-                bottom = 20.dp
-            ),
-            verticalArrangement = Arrangement.spacedBy(15.dp)
-        ) {
-            val filteredRecipes = filterRecipes(sharedViewModel.searchTextState.value, recipeList)
-            for (recipe in filteredRecipes) {
-                item {
-                    RecipeCard(recipe = recipe)
+                NavHost(navController = navController, startDestination = "home") {
+                    composable("home") {
+                        HomeScreen(
+                            modifier = Modifier.fillMaxSize(),
+                            sharedViewModel = sharedViewModel,
+                            recipeList = recipes,
+                            openDetail = { id ->
+                                navController.navigate("detail/$id")
+                            },
+                        )
+                    }
+                    composable(
+                        "detail/{recipeId}",
+                        arguments = listOf(navArgument("recipeId") { type = NavType.IntType }
+                        )
+                    ) { backStackEntry ->
+                        val recipeId = backStackEntry.arguments?.getInt("recipeId")
+                        DetailScreen(
+                            recipe = recipes[recipeId ?: 0],
+                            navigateBack = {
+                            navController.popBackStack()
+                        })
+                    }
                 }
             }
-
         }
-    }
-}
-
-fun filterRecipes(searchText: String, recipeList: List<Recipe>): List<Recipe> {
-    val lowercaseSearchText = searchText.lowercase()
-    return recipeList.filter { recipe ->
-        recipe.name.lowercase().contains(lowercaseSearchText)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RecipeAppPreview() {
-    RecipeApplicationTheme {
-        MyApp(
-            sharedViewModel = SharedViewModel(),
-            recipeList = recipes
-        )
     }
 }

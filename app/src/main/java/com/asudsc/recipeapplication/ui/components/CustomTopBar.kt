@@ -20,18 +20,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-@Composable
-fun CustomTopBar(
-    sharedViewModel: SharedViewModel,
-) {
-    SearchBar(
-        text = sharedViewModel.searchTextState.value,
-        onTextChange = { text ->
-            sharedViewModel.searchTextState.value = text
-        },
-    )
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(

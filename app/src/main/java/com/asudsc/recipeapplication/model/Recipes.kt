@@ -1,4 +1,4 @@
-import com.asudsc.recipeapplication.model.Recipe
+package com.asudsc.recipeapplication.model
 
 val recipes = listOf(
     Recipe(
